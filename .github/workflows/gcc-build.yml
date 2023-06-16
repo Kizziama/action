@@ -27,8 +27,9 @@ jobs:
       run: |
         sudo dnf groupinstall "Development tools" -y
         sudo dnf install mpfr-devel gmp-devel libmpc-devel zlib-devel glibc-devel.i686 glibc-devel binutils-devel g++ texinfo bison flex cmake which ninja-build clang lld bzip2 binutils-arm-linux-gnu binutils-aarch64-linux-gnu curl tar -y
-        curl -LO https://github.com/cli/cli/releases/latest/download/gh_$(curl -s https://api.github.com/repos/cli/cli/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')_linux_amd64.rpm
-        sudo dnf install ./gh_*_linux_amd64.rpm
+        sudo dnf install 'dnf-command(config-manager)' -y
+        sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+        sudo dnf install gh -y
     - name: Build & Push
       run: |
         git config --global user.name Hoppless
@@ -54,8 +55,9 @@ jobs:
       run: |
         sudo dnf groupinstall "Development tools" -y
         sudo dnf install mpfr-devel gmp-devel libmpc-devel zlib-devel glibc-devel.i686 glibc-devel binutils-devel g++ texinfo bison flex cmake which ninja-build clang lld bzip2 curl tar -y
-        curl -LO https://github.com/cli/cli/releases/latest/download/gh_$(curl -s https://api.github.com/repos/cli/cli/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')_linux_amd64.rpm
-        sudo dnf install ./gh_*_linux_amd64.rpm
+        sudo dnf install 'dnf-command(config-manager)' -y
+        sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+        sudo dnf install gh -y
     - name: Build & Push
       run: |
         git config --global user.name Hoppless
