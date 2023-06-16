@@ -1,0 +1,66 @@
+name: GCC+LLD Build
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * SUN'
+
+env:
+      GH_AUTH: ${{ secrets.GH_AUTH }}
+      TELEGRAM_CHAT: ${{ secrets.TG_CHAT }}
+      TELEGRAM_TOKEN: ${{ secrets.TG_TOKEN }}
+
+jobs:
+  build-arm64-tc:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:35
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set build date
+      id: get-date
+      run: |
+        ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
+        echo ::set-output name=date::$(/bin/date -u "+%Y%m%d")
+    - name: Setup
+      run: |
+        sudo dnf groupinstall "Development tools" -y
+        sudo dnf install mpfr-devel gmp-devel libmpc-devel zlib-devel glibc-devel.i686 glibc-devel binutils-devel g++ texinfo bison flex cmake which ninja-build clang lld bzip2 binutils-arm-linux-gnu binutils-aarch64-linux-gnu curl tar -y
+        curl -LO https://github.com/cli/cli/releases/latest/download/gh_$(curl -s https://api.github.com/repos/cli/cli/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')_linux_amd64.rpm
+        sudo dnf install ./gh_*_linux_amd64.rpm
+    - name: Build & Push
+      run: |
+        git config --global user.name Hoppless
+        git config --global user.email hoppless@proton.me
+        git clone https://Hoppless:&{GH_TOKEN}@github/Hoppless/gcc-build build
+        cd build
+        chmod a+x build.sh
+        bash build.sh --arm64
+
+  build-arm-tc:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:35
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set build date
+      id: get-date
+      run: |
+        ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
+        echo ::set-output name=date::$(/bin/date -u "+%Y%m%d")
+    - name: Setup
+      run: |
+        sudo dnf groupinstall "Development tools" -y
+        sudo dnf install mpfr-devel gmp-devel libmpc-devel zlib-devel glibc-devel.i686 glibc-devel binutils-devel g++ texinfo bison flex cmake which ninja-build clang lld bzip2 curl tar -y
+        curl -LO https://github.com/cli/cli/releases/latest/download/gh_$(curl -s https://api.github.com/repos/cli/cli/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')_linux_amd64.rpm
+        sudo dnf install ./gh_*_linux_amd64.rpm
+    - name: Build & Push
+      run: |
+        git config --global user.name Hoppless
+        git config --global user.email hoppless@proton.me
+        git clone https://Hoppless:${GH_TOKEN}@github/Hoppless/gcc-build build
+        cd build
+        chmod a+x build.sh
+        bash build.sh --arm
