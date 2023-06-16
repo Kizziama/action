@@ -6,7 +6,7 @@ on:
     - cron: '0 0 * * SUN'
 
 env:
-      GH_AUTH: ${{ secrets.GH_AUTH }}
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
       TELEGRAM_CHAT: ${{ secrets.TG_CHAT }}
       TELEGRAM_TOKEN: ${{ secrets.TG_TOKEN }}
 
@@ -22,7 +22,7 @@ jobs:
       run: |
         git config --global user.name Hoppless
         git config --global user.email hoppless@proton.me
-        git clone https://Hoppless:&{GH_TOKEN}@github.com/Hoppless/gcc-build build
+        git clone https://Hoppless:${GH_TOKEN}@github.com/Hoppless/gcc-build build
         cd build
         chmod a+x build.sh
         bash build.sh --arm64
