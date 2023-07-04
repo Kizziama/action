@@ -1,0 +1,27 @@
+name: Ubuntu SSH
+
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  tmate:
+    runs-on: ubuntu-latest
+    container:
+      image: hoppless/docker
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Generate Tmate Session
+        run: |
+          sudo bash tmate.sh | tee /tmp/ssh.txt
+          cat /tmp/ssh.txt
+
+      - name: Blank Output
+        run: |
+          bash blank.sh
