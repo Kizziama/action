@@ -9,9 +9,7 @@ defaults:
 
 jobs:
   tmate:
-    runs-on: ubuntu-latest
-    container:
-      image: hoppless/ubuntu:latest
+    runs-on: ubuntu:22.04
 
     steps:
       - name: Checkout
