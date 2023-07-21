@@ -11,7 +11,7 @@ jobs:
   tmate:
     runs-on: ubuntu-latest
     container:
-      image: hoppless/ubuntu:tmate
+      image: hoppless/debian:tmate
 
     steps:
       - name: Checkout
