@@ -9,19 +9,25 @@ env:
       TELEGRAM_CHAT: ${{ secrets.TG_CHAT }}
       TELEGRAM_TOKEN: ${{ secrets.TG_TOKEN }}
 
+permissions: {}
+
 jobs:
   build-llvm:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/neutron-projects/docker-image:arch-neutron
+      image: hoppless/ubuntu:22.04
+
     steps:
-    - uses: actions/checkout@v3
-    - name: Safe directory
-      run: git config --global --add safe.directory /__w/tc-build/tc-build
-    - name: Build LLVM
-      run: |
-        git config --global user.name "Hoppless"
-        git config --global user.email "hoppless@proton.me"
-        git clone --depth=1 https://Hoppless:${GH_TOKEN}@github.com/Hoppless/tc-build
-        cd tc-build
-        bash tc-build.sh
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+
+      - name: Build LLVM
+        run: |
+          git config --global user.name "Hoppless"
+          git config --global user.email "hoppless@proton.me"
+          git clone --depth=1 https://Hoppless:${GH_TOKEN}@github.com/Hoppless/tc-build
+          cd tc-build
+          bash tc-build.sh
