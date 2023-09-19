@@ -2,7 +2,7 @@ name: TC-Build
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 */3 * *'
+    - cron: '0 0 * * SUN'
 
 env:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
